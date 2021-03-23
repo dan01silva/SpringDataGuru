@@ -1,5 +1,6 @@
 package br.com.alura.SpringData.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,10 +23,11 @@ public class CrudFuncionarioService {
 	private boolean system = true;
 	private final DateTimeFormatter f = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	private FuncionarioRepository funcRepository;
-	private CargoRepository cargoRepository;
-	private UnidadeTrabalhoRepository uniRepository;
+	private final FuncionarioRepository funcRepository;
+	private final CargoRepository cargoRepository;
+	private final UnidadeTrabalhoRepository uniRepository;
 
+	VerificationCpf valodationCpf = new VerificationCpf();
 	Funcionario func = new Funcionario();
 
 	public CrudFuncionarioService(FuncionarioRepository funcRepository, CargoRepository cargoRepository,
@@ -33,7 +35,6 @@ public class CrudFuncionarioService {
 		this.funcRepository = funcRepository;
 		this.cargoRepository = cargoRepository;
 		this.uniRepository = uniRepository;
-
 	}
 
 	public void iniciar(Scanner entrada) {
@@ -68,19 +69,27 @@ public class CrudFuncionarioService {
 	}
 
 	private void save(Scanner entrada) {
-		System.out.println("Nome do Funcionario : \n");
-		func.setNome(entrada.next());
-		System.out.println("CPF do Funcionario : \n");
-		func.setCpf(entrada.next());
-		System.out.println("Salário do Funcionario : \n");
-		func.setSalario(entrada.nextBigDecimal());
-		System.out.println("Data da contração  : \n");
-		String dataContratacao = entrada.next();
-		// formatando a data
-		func.setContratoDate(LocalDate.parse(dataContratacao, f));
+		boolean validacao = false;
+
+		System.out.println("Nome do Funcionario :\n");
+		String nome = entrada.next();
+
+		while (validacao) {
+
+			System.out.println("CPF do Funcionario :\n");
+			String cpf = entrada.next();
+
+			validacao = VerificationCpf.isCPF(cpf);
+		}
+
+		System.out.println("Salário do Funcionario :\n");
+		Double Double = entrada.nextDouble();
 
 		System.out.println("Digite o cargoId");
 		Integer cargoId = entrada.nextInt();
+
+		System.out.println("Data da contração :\n");
+		String dataContratacao = entrada.next();
 
 		List<UnidadeTrabalho> unidades = unidade(entrada);
 
@@ -92,54 +101,46 @@ public class CrudFuncionarioService {
 		funcRepository.save(func);
 		System.out.println("Funcionario SALVO");
 	}
-	
-	private List<UnidadeTrabalho> unidade(Scanner entrada) {
-		Boolean isTrue = true;
-		Integer unidadeId;
-		List<UnidadeTrabalho> unidades = new ArrayList<UnidadeTrabalho>();
-
-		while (isTrue) {
-			System.out.println("Digite : 0 para sair");
-			unidadeId = entrada.nextInt();
-
-			if (unidadeId != 0) {
-				Optional<UnidadeTrabalho> unidade = uniRepository.findById(unidadeId);
-				unidades.add(unidade.get());
-			} else {
-				isTrue = false;
-			}
-		}
-		return unidades;
-	}
 
 	private void update(Scanner entrada) {
+		boolean validacao = false;
+		
 		Iterable<Funcionario> funcionarios = funcRepository.findAll();
 		System.out.println("-----------LISTA DE Funcionarios: ----------\n");
 		funcionarios.forEach((func) -> {
 			System.out.println(func);
 		});
 		System.out.println("Informe o ID do Funcionario vc quer atualizar");
-		func.setId(entrada.nextInt());
-		System.out.println("Nome do Funcionario : \n");
-		func.setNome(entrada.next());
-		System.out.println("CPF do Funcionario : \n");
-		func.setCpf(entrada.next());
-		System.out.println("Salário do Funcionario : \n");
-		func.setSalario(entrada.nextBigDecimal());
-		System.out.println("Data da contração  : \n");
-		String dataContratacao = entrada.next();
-		// formatando a data
-		func.setContratoDate(LocalDate.parse(dataContratacao, f));
+		Integer id = entrada.nextInt();
 
-		List<UnidadeTrabalho> unidades = unidade(entrada);
+		System.out.println("Digite o nome");
+		String nome = entrada.next();
+
+		while (validacao) {
+
+			System.out.println("CPF do Funcionario :\n");
+			String cpf = entrada.next();
+
+			System.out.println(VerificationCpf.imprimeCPF(cpf));
+			String resp = entrada.next();
+			if("SIM".equalsIgnoreCase(resp)) {
+				
+			}
+			validacao = VerificationCpf.isCPF(cpf);
+		}
+		
+		System.out.println("Digite o salario");
+		BigDecimal salario = entrada.nextBigDecimal();
+
+		System.out.println("Digite a data de contracao");
+		String dataContratacao = entrada.next();
 
 		System.out.println("Digite o cargoId");
 		Integer cargoId = entrada.nextInt();
 
+		func.setContratoDate(LocalDate.parse(dataContratacao, f));
 		Optional<Cargo> cargo = cargoRepository.findById(cargoId);
-
 		func.setCargo(cargo.get());
-		func.setUnidadeTrabalhos(unidades);
 
 		funcRepository.save(func);
 		System.out.println(" Funcionario ATUALIZADO \n");
@@ -162,8 +163,26 @@ public class CrudFuncionarioService {
 			System.out.println(func);
 		});
 		System.out.println("Informe o id do FUNCIONARIO que deseja EXCLUIR");
+
 		funcRepository.deleteById(entrada.nextInt());
 		System.out.println(" Funcionario DELETADO \n");
+	}
 
+	private List<UnidadeTrabalho> unidade(Scanner entrada) {
+		Boolean isTrue = true;
+		List<UnidadeTrabalho> unidades = new ArrayList<>();
+
+		while (isTrue) {
+			System.out.println("Informe a unidadeId (Para encerrar digite 0)");
+			Integer unidadeId = entrada.nextInt();
+
+			if (unidadeId != 0) {
+				Optional<UnidadeTrabalho> unidade = uniRepository.findById(unidadeId);
+				unidades.add(unidade.get());
+			} else {
+				isTrue = false;
+			}
+		}
+		return unidades;
 	}
 }

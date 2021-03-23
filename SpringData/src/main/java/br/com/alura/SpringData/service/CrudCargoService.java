@@ -103,10 +103,9 @@ public class CrudCargoService {
 		System.out.println("Informe o id do cargo para EXCLUIR");
 		Integer idBy = entrada.nextInt();
 		repository.deleteById(idBy);
-
-		cargos.forEach((cargo) -> {
-			System.out.println(" Cargo DELETADO \n");
-		});
+		
+		System.out.println(" Cargo DELETADO \n");
+		
 	}
 
 	private void vizualizarAll() {

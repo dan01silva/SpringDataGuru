@@ -28,7 +28,7 @@ public class Funcionario {
 	private String nome;
 	private String cpf;
 	private BigDecimal salario;
-	private LocalDate contratoDate ;
+	private LocalDate contratoDate;
 	@ManyToOne
 	@JoinColumn(name = "cargo_id", nullable = false)
 	private Cargo cargo;
@@ -95,7 +95,7 @@ public class Funcionario {
 
 	@Override
 	public String toString() {
-		return "Funcionario: " + "Id:" + id + " Nome: " + nome + " CPF: " + cpf + " Salario: " + salario
-				+ " Cargo:" + cargo.getDescricao()+" Data da Contratacão: " + contratoDate;
+		return "Funcionario ID: " + id + " NOME: " + nome + " CPF: " + cpf + " SALÁRIO: " + salario
+				+ " CARGO:" + cargo.getDescricao()+" DATA DE ADMISSÃO: " + contratoDate;
 	}
 }
