@@ -8,6 +8,7 @@ import java.util.Scanner;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.SpringData.orm.Funcionario;
+import br.com.alura.SpringData.orm.FuncionarioProjecao;
 import br.com.alura.SpringData.repository.FuncionarioRepository;
 
 @Service
@@ -30,18 +31,22 @@ public class RelatoriosService {
 			System.out.println("1 - Filtro pelo Nome ");
 			System.out.println("2 - Filtro pelo Nome, Salário e Data de Contração");
 			System.out.println("3 - Filtro pela Data de Contração");
+			System.out.println("4 - Pesquisa funcionario salário");
 
 			int action = entrada.nextInt();
 
 			switch (action) {
 			case 1:
-				findName(entrada);
+				buscaFuncionarioNome(entrada);
 				break;
 			case 2:
-				findNameSalarioData(entrada);
+				buscaFuncionarioNomeSalarioMaiorData(entrada);
 				break;
 			case 3:
-				findFuncionarioDataC(entrada);
+				buscaFuncionarioDataContratacao(entrada);
+				break;
+			case 4:
+				pesquisaFuncionarioSalario();
 				break;
 			default:
 				system = false;
@@ -50,33 +55,41 @@ public class RelatoriosService {
 		}
 	}
 
-	private void findName(Scanner entrada) {
-		System.out.println("Qual nome deseja buscar: ");
-		String nome = entrada.next();
-		List<Funcionario> findByNome = funcRepository.findByNome(nome);
-		findByNome.forEach(System.out::println);// imprimindo de uma maneira diferente
-	}
-
-	private void findNameSalarioData(Scanner entrada) {
-		System.out.println("Informe o NOME: \n");
-		String nome = entrada.next();
-
-		System.out.println("Informe o SALÁRIO: \n");
-		Double salario = entrada.nextDouble();
-
-		System.out.println("Informe a DATA DE CONTRATAÇÃO: \n");
-		String data = entrada.next();
-		LocalDate date = LocalDate.parse(data, formatter);
-
-//		List<Funcionario> listNomeSalarioContratacao = funcRepository.findNomeSalarioMaiorDataContratacao(nome, salario,date);
-//		listNomeSalarioContratacao.forEach(System.out::println);
-	}
-	private void findFuncionarioDataC(Scanner entrada) {
-		System.out.println("Informe a DATA DE CONTRATAÇÃO que deseja pesquisar\n");
-		String data = entrada.next();
-		LocalDate dateF = LocalDate.parse(data, formatter);
-		
-		List<Funcionario> list = funcRepository.findDataContratacaoMaior(dateF);
+	private void buscaFuncionarioNome(Scanner scanner) {
+		System.out.println("Qual nome deseja pesquisar");
+		String nome = scanner.next();
+		List<Funcionario> list = funcRepository.findByNome(nome);
 		list.forEach(System.out::println);
+	}
+	
+	private void buscaFuncionarioNomeSalarioMaiorData(Scanner scanner) {
+		System.out.println("Qual nome deseja pesquisar");
+		String nome = scanner.next();
+		
+		System.out.println("Qual data contratacao deseja pesquisar");
+		String data = scanner.next();
+		LocalDate localDate = LocalDate.parse(data, formatter);
+		
+		System.out.println("Qual salario deseja pesquisar");
+		Double salario = scanner.nextDouble();
+		
+		List<Funcionario> list = funcRepository
+				.findNomeSalarioMaiorDataContratacao(nome, salario, localDate);
+		list.forEach(System.out::println);
+	}
+	
+	private void buscaFuncionarioDataContratacao(Scanner scanner) {
+		System.out.println("Qual data contratacao deseja pesquisar");
+		String data = scanner.next();
+		LocalDate localDate = LocalDate.parse(data, formatter);
+		
+		List<Funcionario> list = funcRepository.findDataContratacaoMaior(localDate);
+		list.forEach(System.out::println);
+	}
+	private void pesquisaFuncionarioSalario() {
+		List<FuncionarioProjecao> list = funcRepository.findFuncionarioSalario();
+		
+		list.forEach(f -> System.out.println("Funcionario id : " + f.getId()
+		+ " | nome: " + f.getNome() + " | salário: " + f.getSalario() ));
 	}
 }

@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.alura.SpringData.orm.Cargo;
@@ -56,7 +60,7 @@ public class CrudFuncionarioService {
 				update(entrada);
 				break;
 			case 3:
-				vizualizarAll();
+				vizualizarAll(entrada);
 				break;
 			case 4:
 				deletarbyId(entrada);
@@ -146,13 +150,20 @@ public class CrudFuncionarioService {
 		System.out.println(" Funcionario ATUALIZADO \n");
 	}
 
-	private void vizualizarAll() {
-		Iterable<Funcionario> funcionarios = funcRepository.findAll();
-		System.out.println("-----------LISTA DE Funcionarios : ----------\n");
-		funcionarios.forEach((func) -> {
-			System.out.println(func);
-		});
-		System.out.println("\n");
+	private void vizualizarAll(Scanner entrada) {
+		System.out.println("Qual página você deseja vizuallizar ?");
+		Integer page = entrada.nextInt();
+		
+		Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.ASC, "nome")); 
+
+		 Page<Funcionario> funcionarios = funcRepository.findAll(pageable);
+		
+		System.out.println(funcionarios);
+		System.out.println("Página atual: " + funcionarios.getNumber());
+		System.out.println("Totoal de elementos: " + funcionarios.getTotalElements());
+		
+		funcionarios.forEach(func -> System.out.println(func)); 
+		
 	}
 
 	private void deletarbyId(Scanner entrada) {

@@ -1,6 +1,5 @@
 package br.com.alura.SpringData.service;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import br.com.alura.SpringData.repository.UnidadeTrabalhoRepository;
 public class CrudUnidadeService {
 
 	private UnidadeTrabalhoRepository repository;
-	UnidadeTrabalho uniTrab = new UnidadeTrabalho();
 	private boolean system = true;
 
 	public CrudUnidadeService(UnidadeTrabalhoRepository repository) {
@@ -20,7 +18,7 @@ public class CrudUnidadeService {
 	}
 
 	public void iniciar(Scanner entrada) {
-		while (system) {
+		while (system) {	
 			System.out.println("Qual a ação da Unidade deseja executar ?");
 			System.out.println("0 - Sair ");
 			System.out.println("1 - Salvar uma Unidade ");
@@ -50,17 +48,12 @@ public class CrudUnidadeService {
 		}
 	}
 
-	private void save(Scanner entrada) throws InputMismatchException {
-		String descricao, ende;
-
-		System.out.println("Nome da Unidade :\n");
-		descricao = entrada.next();
-
-		System.out.println("Endereço da Unidade :");
-		ende = entrada.next();
-
-		uniTrab.setDescricao(descricao);
-		uniTrab.setEndereco(ende);
+	private void save(Scanner entrada) {
+		UnidadeTrabalho uniTrab = new UnidadeTrabalho();
+		System.out.println("Descrição da Unidade : \n");
+		uniTrab.setDescricao(entrada.next());
+		System.out.println("Endereço da Unidade : \n");
+		uniTrab.setEndereco(entrada.next());
 
 		repository.save(uniTrab);
 		System.out.println("Unidade Salva \n");
@@ -72,16 +65,19 @@ public class CrudUnidadeService {
 		unidades.forEach((unidade) -> {
 			System.out.println(unidade);
 		});
+		
 		System.out.println("Informe o ID da unidade vc quer atualizar");
-		uniTrab.setId(entrada.nextInt());
+		Integer id = entrada.nextInt();
 		System.out.println("Nome da Unidade :\n");
-		String descricao = entrada.next();
+		String nome = entrada.next();
 
 		System.out.println("Endereço da Unidade :\n");
-		String ende = entrada.nextLine();
-
-		uniTrab.setDescricao(descricao);
-		uniTrab.setEndereco(ende);
+		String endereco = entrada.nextLine();
+		
+		UnidadeTrabalho uniTrab = new UnidadeTrabalho();
+		uniTrab.setId(id);
+		uniTrab.setDescricao(nome);
+		uniTrab.setEndereco(endereco);
 
 		repository.save(uniTrab);
 		System.out.println(" Unidade ATUALIZADA \n");

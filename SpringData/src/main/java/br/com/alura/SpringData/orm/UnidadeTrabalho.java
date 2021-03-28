@@ -21,31 +21,31 @@ public class UnidadeTrabalho {
     @ManyToMany(mappedBy = "unidadesTrabalho", fetch = FetchType.EAGER)
     private List<Funcionario> funcionarios;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
-	
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public String getEndereco() {
-		return endereco;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+    public String getEndereco() {
+        return endereco;
+    }
 
-	public List<Funcionario> getFuncionarios() {
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public List<Funcionario> getFuncionarios() {
         return funcionarios;
     }
 

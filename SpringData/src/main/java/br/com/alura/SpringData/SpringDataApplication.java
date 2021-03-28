@@ -5,18 +5,23 @@ import java.util.Scanner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import br.com.alura.SpringData.service.CrudCargoService;
 import br.com.alura.SpringData.service.CrudFuncionarioService;
 import br.com.alura.SpringData.service.CrudUnidadeService;
 import br.com.alura.SpringData.service.RelatoriosService;
 
+@EnableJpaRepositories
 @SpringBootApplication
 public class SpringDataApplication implements CommandLineRunner {
 
 	private final CrudCargoService cargoService;
+	
 	private final CrudUnidadeService unidadeService;
+	
 	private final CrudFuncionarioService funcService;
+	
 	private final RelatoriosService relatoriosService;
 
 	private Boolean system = true;

@@ -16,7 +16,6 @@ public class CrudCargoService {
 	private final CargoRepository repository;
 	private boolean system = true;
 	Cargo cargo = new Cargo();
-	private Scanner entrada;
 
 	/**
 	 * @param repository Injeção de dependência Já que não podemos instanciar uma
@@ -74,9 +73,9 @@ public class CrudCargoService {
 		findAll.forEach((cargos) -> {
 			System.out.println(cargos);
 		});
+		
 		System.out.println("Escolha o id para editar na lista");
 		Integer idBy = entrada.nextInt();
-
 		System.out.println("Cargo Buscado: " + buscarById(idBy) + "\n Qual a nova descrição de cargo: ");
 		String novaDescricao = entrada.next();
 		// Atualizando
